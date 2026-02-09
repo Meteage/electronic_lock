@@ -18,11 +18,15 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "stm32f1xx_hal_def.h"
+#include "stm32f1xx_hal_gpio.h"
+#include "stm32f1xx_hal_uart.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "keyboard20.h"
 #include <stdio.h>
 /* USER CODE END Includes */
 
@@ -89,14 +93,18 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  
+  KEYBOARD20_Scan();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    
+    Key key = KEYBOARD20_Scan();
+    if(key){
+      HAL_GPIO_TogglePin(SYS_LED_GPIO_Port, SYS_LED_Pin);
+      HAL_UART_Transmit(&huart1, (const uint8_t *)"TEST", 5, HAL_MAX_DELAY);
+    }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
