@@ -57,13 +57,8 @@ void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, PIN_1_Pin|PIN_2_Pin|PIN_3_Pin|PIN_4_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(LOCK_GPIO_Port, LOCK_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(OPEN_LED_GPIO_Port, OPEN_LED_Pin, GPIO_PIN_SET);
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOB, CLOSE_LED_Pin|SYS_LED_Pin|OLED_SDA_Pin|OLED_SCK_Pin, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOB, LOCK_Pin|OPEN_LED_Pin|CLOSE_LED_Pin|SYS_LED_Pin
+                          |OLED_SDA_Pin|OLED_SCK_Pin, GPIO_PIN_RESET);
 
   /*Configure GPIO pin : WARNING_LED_Pin */
   GPIO_InitStruct.Pin = WARNING_LED_Pin;
@@ -72,10 +67,8 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(WARNING_LED_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : PIN_1_Pin PIN_2_Pin PIN_3_Pin PIN_4_Pin
-                           LOCK_Pin */
-  GPIO_InitStruct.Pin = PIN_1_Pin|PIN_2_Pin|PIN_3_Pin|PIN_4_Pin
-                          |LOCK_Pin;
+  /*Configure GPIO pins : PIN_1_Pin PIN_2_Pin PIN_3_Pin PIN_4_Pin */
+  GPIO_InitStruct.Pin = PIN_1_Pin|PIN_2_Pin|PIN_3_Pin|PIN_4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -86,11 +79,11 @@ void MX_GPIO_Init(void)
   GPIO_InitStruct.Pin = PIN_5_Pin|PIN_6_Pin|PIN_7_Pin|PIN_8_Pin
                           |PIN_9_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : OPEN_LED_Pin CLOSE_LED_Pin SYS_LED_Pin */
-  GPIO_InitStruct.Pin = OPEN_LED_Pin|CLOSE_LED_Pin|SYS_LED_Pin;
+  /*Configure GPIO pins : LOCK_Pin OPEN_LED_Pin CLOSE_LED_Pin SYS_LED_Pin */
+  GPIO_InitStruct.Pin = LOCK_Pin|OPEN_LED_Pin|CLOSE_LED_Pin|SYS_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;

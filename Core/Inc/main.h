@@ -77,8 +77,8 @@ void Error_Handler(void);
 #define PIN_8_GPIO_Port GPIOB
 #define PIN_9_Pin GPIO_PIN_11
 #define PIN_9_GPIO_Port GPIOB
-#define LOCK_Pin GPIO_PIN_12
-#define LOCK_GPIO_Port GPIOA
+#define LOCK_Pin GPIO_PIN_15
+#define LOCK_GPIO_Port GPIOB
 #define OPEN_LED_Pin GPIO_PIN_5
 #define OPEN_LED_GPIO_Port GPIOB
 #define CLOSE_LED_Pin GPIO_PIN_6
