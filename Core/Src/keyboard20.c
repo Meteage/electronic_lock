@@ -16,10 +16,7 @@
 #define ROW4_R HAL_GPIO_ReadPin(PIN_5_GPIO_Port, PIN_5_Pin)
 
 void KEYBOARD_Init(void){
-    COL0_W(1);
-    COL1_W(1);
-    COL2_W(1);
-    COL3_W(1);
+    COL0_W(1);COL1_W(1);COL2_W(1);COL3_W(1);
 }
 
 Key KEYBOARD20_Scan(void){
