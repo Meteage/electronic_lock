@@ -109,6 +109,12 @@ int main(void)
   uint8_t index = 0;
   uint8_t error_count = 0; //错误次数
 
+  uint32_t g_last_key_time = 0;
+  uint8_t g_screen_off = 0;
+
+  //debug
+  uint8_t X_Enable = 1; //是否开启掩码
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -119,6 +125,9 @@ int main(void)
     Key key = KEYBOARD20_Scan();
     if(key) {
         HAL_GPIO_TogglePin(SYS_LED_GPIO_Port, SYS_LED_Pin);
+        g_last_key_time = HAL_GetTick();  // 记录最后按键时间
+        g_screen_off = 0;                 // 屏幕唤醒
+
         //响应按键
         switch (key) {
           case KEY_J:
@@ -139,20 +148,18 @@ int main(void)
             }
           break;
           case KEY_ESC:
-            //清空
-            for (int i=0;i<6; i++) {
-               input_buffer[i] = 0;
-            }
+            // 清空输入
+            memset(input_buffer, 0, 7);
             index = 0;
           break;
           case KEY_ENT:
             //确认键 
             //比较命名是否正确 用strcmp比较吧 那么就把存储的用字符串数组存起来
             if(strcmp(password, input_buffer) == 0){
-
-              strcpy(input_buffer,"Right");
+              //清空error_count
+              error_count = 0;
               OLED_NewFrame();
-              OLED_PrintString(1, 1, (char *)input_buffer, &font16x16, OLED_COLOR_NORMAL);
+              OLED_PrintString(1, 1, "Right", &font16x16, OLED_COLOR_NORMAL);
               OLED_ShowFrame();
 
               //开门3秒
@@ -167,7 +174,8 @@ int main(void)
               HAL_GPIO_WritePin(CLOSE_LED_GPIO_Port, CLOSE_LED_Pin, GPIO_PIN_RESET);
 
               //重置
-              for (int i=0;i<6; i++) {input_buffer[i] = 0;}
+              // 清空输入
+              memset(input_buffer, 0, 7);
               index = 0;
             }
             else {
@@ -183,23 +191,50 @@ int main(void)
                 OLED_ShowFrame();
               }
               else{
-                strcpy(input_buffer,"Error");
                 OLED_NewFrame();
-                OLED_PrintString(1, 1, (char *)input_buffer, &font16x16, OLED_COLOR_NORMAL);
+                OLED_PrintString(1, 1, "Error", &font16x16, OLED_COLOR_NORMAL);
                 OLED_ShowFrame();
                 //显示3秒后关闭
                 HAL_Delay(3000);
                 //重置
-                for (int i=0;i<6; i++) {input_buffer[i] = 0;}
+                // 清空输入
+                memset(input_buffer, 0, 7);
                 index = 0;
               }
               
             }
           break;
         }
+        char display[6+1] = "______";//用于显示掩码
+        for(int i=0;i<index;i++){
+          if(index-1 == i){
+            display[i] = input_buffer[i];//最后一位正常显示
+          }
+          else{
+            display[i] = '*';
+          }
+        }
+
         OLED_NewFrame();
-        OLED_PrintString(1, 1, (char *)input_buffer, &font16x16, OLED_COLOR_NORMAL);
+        if(X_Enable){
+          OLED_PrintString(1, 1, (char *)display, &font16x16, OLED_COLOR_NORMAL);
+        }else{
+          OLED_PrintString(1, 1, (char *)input_buffer, &font16x16, OLED_COLOR_NORMAL);
+        }
         OLED_ShowFrame();
+    }
+
+    // 检查空闲超时
+    if(!g_screen_off && (HAL_GetTick() - g_last_key_time > 15000)) {
+        // 1. 清空输入
+        memset(input_buffer, 0, 7);
+        index = 0;
+        
+        // 2. 关屏幕（黑屏）
+        OLED_NewFrame();      // 清空显存
+        OLED_ShowFrame();     // 显示黑屏
+        
+        g_screen_off = 1;    // 标记已息屏
     }
 
     /* USER CODE END WHILE */
