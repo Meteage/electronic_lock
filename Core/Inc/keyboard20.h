@@ -1,7 +1,7 @@
 #ifndef __KEYBOARD20_H__
 #define __KEYBOARD20_H__
 
-typedef enum {
+typedef enum key{
     KEY_NULL,
     KEY_0,KEY_1,KEY_2,KEY_3,KEY_4,
     KEY_5,KEY_6,KEY_7,KEY_8,KEY_9,
@@ -10,6 +10,9 @@ typedef enum {
     KEY_ESC,KEY_ENT,
 } Key;
 
+void KEYBOARD20_Init(void);
 Key KEYBOARD20_Scan(void);
+
+char KEYBOARD20_GetKeyValue(Key key);
 
 #endif

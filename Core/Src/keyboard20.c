@@ -15,8 +15,21 @@
 #define ROW3_R HAL_GPIO_ReadPin(PIN_6_GPIO_Port, PIN_6_Pin)
 #define ROW4_R HAL_GPIO_ReadPin(PIN_5_GPIO_Port, PIN_5_Pin)
 
-void KEYBOARD_Init(void){
+void KEYBOARD20_Init(void){
     COL0_W(1);COL1_W(1);COL2_W(1);COL3_W(1);
+}
+
+char KEYBOARD20_GetKeyValue(Key key){
+    switch (key) {
+        case KEY_0...KEY_9:
+        return (key-1)+'0';
+        case KEY_J:
+        return '#';
+        case KEY_X:
+        return '*';
+        default:
+        return 0;
+    }
 }
 
 Key KEYBOARD20_Scan(void){

@@ -24,6 +24,7 @@ set(MX_Application_Src
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/software_i2c.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/ssd1306/font.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/ssd1306/oled.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/lock_sys.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/gpio.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/usart.c
     ${CMAKE_CURRENT_SOURCE_DIR}/../../Core/Src/stm32f1xx_it.c
