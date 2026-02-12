@@ -104,9 +104,10 @@ int main(void)
   KEYBOARD20_Init();
   HAL_UART_Transmit(&huart1, (const uint8_t *)"TEST", 5, HAL_MAX_DELAY);
 
-  char password[6+1] = "1234#*";
-  char input_buffer[6+1] = {0};
+  char password[6+1] = "1234#*"; //正确密码
+  char input_buffer[6+1] = {0}; //输入缓存
   uint8_t index = 0;
+  uint8_t error_count = 0; //错误次数
 
   /* USER CODE END 2 */
 
@@ -170,15 +171,29 @@ int main(void)
               index = 0;
             }
             else {
-              strcpy(input_buffer,"Error");
-              OLED_NewFrame();
-              OLED_PrintString(1, 1, (char *)input_buffer, &font16x16, OLED_COLOR_NORMAL);
-              OLED_ShowFrame();
-              //显示3秒后关闭
-              HAL_Delay(3000);
-              //重置
-              for (int i=0;i<6; i++) {input_buffer[i] = 0;}
-              index = 0;
+              error_count++;//错误计算加1
+              if(error_count >= 5) {
+                OLED_NewFrame();
+                OLED_PrintString(1, 1, "Lock 10s", &font16x16, OLED_COLOR_NORMAL);
+                OLED_ShowFrame();
+                HAL_Delay(10*1000);
+                error_count = 0;
+                OLED_NewFrame();
+                OLED_PrintString(1, 1, "Ready", &font16x16, OLED_COLOR_NORMAL);
+                OLED_ShowFrame();
+              }
+              else{
+                strcpy(input_buffer,"Error");
+                OLED_NewFrame();
+                OLED_PrintString(1, 1, (char *)input_buffer, &font16x16, OLED_COLOR_NORMAL);
+                OLED_ShowFrame();
+                //显示3秒后关闭
+                HAL_Delay(3000);
+                //重置
+                for (int i=0;i<6; i++) {input_buffer[i] = 0;}
+                index = 0;
+              }
+              
             }
           break;
         }
