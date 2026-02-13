@@ -18,10 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "ssd1306/font.h"
 #include "stm32f1xx_hal.h"
-#include "stm32f1xx_hal_gpio.h"
-#include "stm32f1xx_hal_uart.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -34,6 +31,7 @@
 #include "ssd1306/oled.h"
 #include "lock_sys.h"
 #include <string.h>
+#include "at24c02.h"
 
 /* USER CODE END Includes */
 
@@ -518,6 +516,15 @@ int main(void)
               memset(input_buffer, 0, 7);
               index = 0;
 
+            }
+            break;
+            case KEY_F2:
+            {
+              uint8_t test_value = '9';
+              AT24C02_WriteByte(0x00, test_value);
+              HAL_Delay(20);
+              uint8_t read_value;
+              AT24C02_ReadByte(0x00, &read_value);
             }
             break;
           }

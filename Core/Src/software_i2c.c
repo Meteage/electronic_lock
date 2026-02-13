@@ -1,9 +1,8 @@
 #include "software_i2c.h"
 #include "cmsis_gcc.h"
+#include "stm32f1xx_hal.h"
 
 static void I2C_Delay(void) {
-    __NOP();
-    __NOP();
     __NOP();
     __NOP();
 }
@@ -17,21 +16,24 @@ void SOFTWARE_I2C_Init(void){
 
 void SOFTWARE_I2C_Start(void){
     SDA_W(1);
-    //I2C_Delay(2);
+    //debug
+    I2C_Delay();
     SCL_W(1);
     I2C_Delay();
     SDA_W(0);
     I2C_Delay();
-
     SCL_W(0);//默认保持SCL为低
 }
 
 void SOFTWARE_I2C_Stop(void){
     SDA_W(0);
-    //I2C_Delay(2);
+    //debug
+    I2C_Delay();
     SCL_W(1);
     I2C_Delay();
     SDA_W(1);
+    //debug
+    I2C_Delay();
 }
 
 //发送一个字节 8bit 高位先发
@@ -47,15 +49,14 @@ void SOFTWARE_I2C_SendByte(uint8_t byte){
     }
 }
 
+//这里时序不对
 uint8_t SOFTWARE_I2C_ReceiveByte(){
     uint8_t byte = 0;
-    SDA_W(1); //释放SDA线
+    SDA_W(1); //释放SDA线 
     for(int i=0;i<8;i++){
-        //读取SDA
-        byte <<= 1;//0-7移8次，所以只能放前面
-        if(SDA_R) byte |= 1;
         SCL_W(1);
-        I2C_Delay();
+        I2C_Delay();  //读取时序应该放中间
+        if(SDA_R) byte |= (0x80 >> i);
         SCL_W(0);
         I2C_Delay();
     }
