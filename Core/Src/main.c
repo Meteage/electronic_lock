@@ -18,7 +18,6 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32f1xx_hal.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -131,6 +130,13 @@ int main(void)
 
   //debug
   uint8_t X_Enable = 1; //是否开启掩码
+
+  //密码用AT24C02存储
+  uint8_t check[7] = {0};
+  AT24C02_ReadData(0x00, check, 7);
+  if(check[0] == 0xFF) {  // EEPROM 默认值是 0xFF
+      AT24C02_WritePage(0x00, &password, 7);  // 第一次使用才写默认密码
+  }
 
   /* USER CODE END 2 */
 
@@ -327,6 +333,8 @@ int main(void)
               }
             break;
             case KEY_ENT:
+              //读取密码
+              AT24C02_ReadData(0x00, password, 7);
               //确认键 
               if(g_state == STATE_IDLE){
                   //比较命名是否正确 用strcmp比较吧 那么就把存储的用字符串数组存起来
@@ -490,7 +498,8 @@ int main(void)
                 //复制
                 if(strcmp(new_password,input_buffer)==0){
                   //设置新密码
-                  strcpy(password, input_buffer);
+                  //strcpy(password, input_buffer);
+                  AT24C02_WritePage(0x00, input_buffer, 7);
                   //改变
                   g_state = STATE_IDLE;
                   // 清空输入
