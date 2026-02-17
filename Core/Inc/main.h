@@ -59,6 +59,8 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define WARNING_LED_Pin GPIO_PIN_13
 #define WARNING_LED_GPIO_Port GPIOC
+#define TOUCH_Pin GPIO_PIN_0
+#define TOUCH_GPIO_Port GPIOA
 #define PIN_1_Pin GPIO_PIN_4
 #define PIN_1_GPIO_Port GPIOA
 #define PIN_2_Pin GPIO_PIN_5
