@@ -232,7 +232,7 @@ uint8_t AS608_StoreChar(uint8_t buffer_id,uint8_t page_id){
 }
 
 //返回确认码
-uint8_t AS608_Search(uint8_t buffer_id,uint8_t start_page,uint8_t page_num){
+uint8_t AS608_Search(uint8_t buffer_id,uint16_t start_page,uint16_t page_num){
 
     uint8_t rsp_buffer[16] = {0};
     uint8_t cmd_buffer[] = {
@@ -260,6 +260,61 @@ uint8_t AS608_Search(uint8_t buffer_id,uint8_t start_page,uint8_t page_num){
 
     return rsp_buffer[9];
 }
+
+
+
+uint8_t AS608_DeletChar(uint16_t page_id,uint16_t num){
+    uint8_t rsp_buffer[12] = {0};
+    uint8_t cmd_buffer[] = {
+        0xEF, 0x01,//包头
+        0xFF, 0xFF, 0xFF, 0xFF,//默认地址
+        0x01,//包标识
+        0x00, 0x07,//长度
+        0x0c,//指令码
+        (page_id>>8)&0xff,page_id&0xff,
+        (num>>8)&0xff,num&0xff,
+        0x00, 0x00//校验和
+    };
+    uint8_t rsp_len = sizeof(rsp_buffer);
+    uint8_t cmd_len = sizeof(cmd_buffer);
+
+    uint8_t sum = 0;
+    for (uint8_t i=6; i<cmd_len-2; i++) {
+        sum += cmd_buffer[i];
+    }
+    cmd_buffer[cmd_len-2] = (sum >> 8)&0xff;
+    cmd_buffer[cmd_len-1] = sum&0xff;
+
+    AS608_Transceive(cmd_buffer,cmd_len, rsp_buffer, rsp_len);
+
+    return rsp_buffer[9];
+}
+
+uint8_t AS608_Empty(void){
+    uint8_t rsp_buffer[12] = {0};
+    uint8_t cmd_buffer[12] = {
+        0xEF, 0x01,//包头
+        0xFF, 0xFF, 0xFF, 0xFF,//默认地址
+        0x01,//包标识
+        0x00, 0x07,//长度
+        0x0d,//指令码
+        0x00, 0x11//校验和
+    };
+    uint8_t rsp_len = sizeof(rsp_buffer);
+    uint8_t cmd_len = sizeof(cmd_buffer);
+
+    uint8_t sum = 0;
+    for (uint8_t i=6; i<cmd_len-2; i++) {
+        sum += cmd_buffer[i];
+    }
+    cmd_buffer[cmd_len-2] = (sum >> 8)&0xff;
+    cmd_buffer[cmd_len-1] = sum&0xff;
+
+    AS608_Transceive(cmd_buffer,cmd_len, rsp_buffer, rsp_len);
+
+    return rsp_buffer[9];
+}
+
 
 
 

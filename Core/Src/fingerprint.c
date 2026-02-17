@@ -108,3 +108,11 @@ uint8_t Fingerprint_Identify(void)
     rsp = AS608_Search(0x01, 0x00, 300);
     return (rsp == 0) ? FINGERPRINT_OK : FINGERPRINT_FAIL;
 }
+
+uint8_t Fingerprint_Delete(uint8_t id){
+    return AS608_DeletChar(id, 1);
+};
+
+uint8_t Fingerprint_Empty(void){
+    return AS608_Empty();
+};
